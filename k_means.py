@@ -1,5 +1,4 @@
 import os
-from typing import Tuple
 
 import cv2
 import matplotlib.pyplot as plt
@@ -17,7 +16,7 @@ def read_file() -> np.ndarray:
         return cv2.imread(file_path)
 
 
-def process_image(src_img: str, k: int = 8, max_iter: int = 10) -> None:
+def process_image(src_img: str, k: int = 8, max_iter: int = 10) -> np.ndarray:
     """
     Применяем алгоритм k-средних для картинки
     """
@@ -38,13 +37,32 @@ def process_image(src_img: str, k: int = 8, max_iter: int = 10) -> None:
 
     # Apply the quantization to the pixel values and reshape back to the original image shape
     res = center[label.flatten()]
-    res2 = res.reshape((src_img.shape))
+    res2 = res.reshape(src_img.shape)
 
-    # Display the resulting image
-    plt.imshow(res2)
+    return res2
+
+
+def save_image(img: np.ndarray) -> None:
+    """
+    Сохраняет изображение по введенному пользователем пути
+    """
+    file_path = input("Enter the path to save the image: ")
+    if not os.path.isdir(os.path.dirname(file_path)):
+        raise FileNotFoundError("Directory not found")
+    cv2.imwrite(file_path, img)
+    print(f"Image saved to {file_path}")
+
+
+def display_image(img) -> None:
+    """
+    Показывает картинку
+    """
+    plt.imshow(img)
     plt.show()
 
 
 if __name__ == "__main__":
     image = read_file()
-    process_image(image)
+    image = process_image(image)
+    save_image(image)
+    display_image(image)

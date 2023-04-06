@@ -19,7 +19,7 @@ def read_file() -> np.ndarray:
 
 def process_image(src_img: str,
                   blur_kernel_size: Tuple[int, int] = (5, 5),
-                  blur_sigma: float = 1.4) -> None:
+                  blur_sigma: float = 1.4) -> np.ndarray:
     """
     Применяем фильтр Собеля и показываем результат
     """
@@ -36,11 +36,34 @@ def process_image(src_img: str,
     # Compute the magnitude of the gradient
     mag = np.sqrt(gx ** 2 + gy ** 2)
 
-    # Display the resulting image
-    plt.imshow(np.uint8(mag))
+    return np.uint8(mag)
+
+    # # Display the resulting image
+    # plt.imshow(np.uint8(mag))
+    # plt.show()
+
+
+def save_image(img: np.ndarray) -> None:
+    """
+    Сохраняет изображение по введенному пользователем пути
+    """
+    file_path = input("Enter the path to save the image: ")
+    if not os.path.isdir(os.path.dirname(file_path)):
+        raise FileNotFoundError("Directory not found")
+    cv2.imwrite(file_path, img)
+    print(f"Image saved to {file_path}")
+
+
+def display_image(img) -> None:
+    """
+    Показывает картинку
+    """
+    plt.imshow(img)
     plt.show()
 
 
 if __name__ == "__main__":
     image = read_file()
-    process_image(image)
+    image = process_image(image)
+    save_image(image)
+    display_image(image)
